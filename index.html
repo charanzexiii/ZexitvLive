@@ -151,7 +151,7 @@
             font-size: 13px;
         }
 
-        /* ===== SEARCH (now below the player) ===== */
+        /* ===== SEARCH (below player) ===== */
         .search-box {
             width: 100%;
             margin-bottom: 22px;
@@ -200,7 +200,6 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.45);
-            position: relative;
         }
         .player-header {
             min-height: 55px;
@@ -242,67 +241,6 @@
             color: #888;
             text-align: center;
             font-size: 12px;
-        }
-
-        /* ===== PLAYER CONTROL BAR (fullscreen only) ===== */
-        .player-control-bar {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 10px 16px;
-            background: #111119;
-            border-top: 1px solid #252530;
-        }
-        .ctrl-btn {
-            background: #1e1e2a;
-            border: 1px solid #2e2e3a;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-            white-space: nowrap;
-        }
-        .ctrl-btn:hover {
-            background: #ff3b6b;
-            border-color: #ff3b6b;
-        }
-
-        /* ===== FULLSCREEN OVERLAY (exit button only) ===== */
-        .fullscreen-overlay-controls {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 9999;
-            display: none;
-        }
-        .fullscreen-overlay-controls.visible {
-            display: flex;
-        }
-        .overlay-btn {
-            background: rgba(30, 30, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            backdrop-filter: blur(6px);
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-        }
-        .overlay-btn:hover {
-            background: #ff3b6b;
-            border-color: #ff3b6b;
         }
 
         /* ===== FILTERS ===== */
@@ -494,80 +432,11 @@
             .channel-name { font-size: 14px; }
             video { min-height: 210px; }
             .live-label { top: 6px; left: 6px; padding: 4px 7px; font-size: 9px; }
-
-            .ctrl-btn {
-                width: 100%;
-                justify-content: center;
-                font-size: 12px;
-                padding: 8px 8px;
-            }
-
-            .fullscreen-overlay-controls {
-                top: 8px;
-                right: 8px;
-            }
-            .overlay-btn {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
         }
 
         @media (max-width: 430px) {
             .channel-grid { grid-template-columns: repeat(2, 1fr); }
             .channel-logo { height: 95px; }
-        }
-
-        /* ===== FULLSCREEN (native) ===== */
-        .player-wrapper:fullscreen {
-            border-radius: 0;
-            border: none;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
-        }
-        .player-wrapper:fullscreen video {
-            flex: 1;
-            min-height: auto;
-            height: 100%;
-            width: 100%;
-            object-fit: contain;
-        }
-        .player-wrapper:fullscreen .player-header,
-        .player-wrapper:fullscreen .player-message,
-        .player-wrapper:fullscreen .player-control-bar {
-            display: none !important;
-        }
-        .player-wrapper:fullscreen .fullscreen-overlay-controls.visible {
-            display: flex !important;
-        }
-
-        .player-wrapper:-webkit-full-screen {
-            border-radius: 0;
-            border: none;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
-        }
-        .player-wrapper:-webkit-full-screen video {
-            flex: 1;
-            min-height: auto;
-            height: 100%;
-            width: 100%;
-            object-fit: contain;
-        }
-        .player-wrapper:-webkit-full-screen .player-header,
-        .player-wrapper:-webkit-full-screen .player-message,
-        .player-wrapper:-webkit-full-screen .player-control-bar {
-            display: none !important;
-        }
-        .player-wrapper:-webkit-full-screen .fullscreen-overlay-controls.visible {
-            display: flex !important;
         }
     </style>
 </head>
@@ -604,9 +473,9 @@
             </div>
         </div>
 
-        <!-- VIDEO PLAYER (now above the search) -->
+        <!-- VIDEO PLAYER -->
         <section class="player-section" id="playerSection">
-            <div class="player-wrapper" id="playerWrapper">
+            <div class="player-wrapper">
                 <div class="player-header">
                     <div class="player-title" id="playerTitle">Live Channel</div>
                     <button class="close-player" id="closePlayerButton" type="button">×</button>
@@ -614,21 +483,11 @@
 
                 <video id="videoPlayer" controls playsinline></video>
 
-                <!-- FULLSCREEN OVERLAY (exit button only) -->
-                <div class="fullscreen-overlay-controls" id="fullscreenOverlayControls">
-                    <button class="overlay-btn" id="exitFullscreenBtn" title="Exit Fullscreen">✕ Exit Fullscreen</button>
-                </div>
-
-                <!-- PLAYER CONTROL BAR (fullscreen button only) -->
-                <div class="player-control-bar">
-                    <button class="ctrl-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶ Fullscreen</button>
-                </div>
-
                 <div class="player-message">Live stream playback requires an authorized stream URL.</div>
             </div>
         </section>
 
-        <!-- SEARCH (now below the video player) -->
+        <!-- SEARCH (below player) -->
         <div class="search-box">
             <span class="search-icon">🔍</span>
             <input type="text" id="searchInput" placeholder="Search channel..." autocomplete="off">
@@ -721,10 +580,6 @@
         const videoPlayer = document.getElementById("videoPlayer");
         const playerTitle = document.getElementById("playerTitle");
         const closePlayerButton = document.getElementById("closePlayerButton");
-        const playerWrapper = document.getElementById("playerWrapper");
-        const fullscreenBtn = document.getElementById("fullscreenBtn");
-        const fullscreenOverlayControls = document.getElementById("fullscreenOverlayControls");
-        const exitFullscreenBtn = document.getElementById("exitFullscreenBtn");
 
         let currentCategory = "all";
 
@@ -818,59 +673,9 @@
             videoPlayer.removeAttribute("src");
             videoPlayer.load();
             playerSection.classList.remove("show");
-            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                exitFullscreen();
-            }
         }
 
         closePlayerButton.addEventListener("click", closePlayer);
-
-        /* ===== FULLSCREEN LOGIC ===== */
-        function enterFullscreen() {
-            if (!playerWrapper) return;
-            if (playerWrapper.requestFullscreen) {
-                playerWrapper.requestFullscreen().catch(() => {});
-            } else if (playerWrapper.webkitRequestFullscreen) {
-                playerWrapper.webkitRequestFullscreen();
-            } else if (playerWrapper.msRequestFullscreen) {
-                playerWrapper.msRequestFullscreen();
-            }
-        }
-
-        function exitFullscreen() {
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
-            } else if (document.webkitFullscreenElement) {
-                document.webkitExitFullscreen();
-            } else if (document.msFullscreenElement) {
-                document.msExitFullscreen();
-            }
-        }
-
-        function toggleFullscreen() {
-            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                exitFullscreen();
-            } else {
-                enterFullscreen();
-            }
-        }
-
-        fullscreenBtn.addEventListener("click", toggleFullscreen);
-        exitFullscreenBtn.addEventListener("click", exitFullscreen);
-
-        /* ===== FULLSCREEN STATE LISTENER ===== */
-        function updateFullscreenUI() {
-            const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
-            if (isFullscreen) {
-                fullscreenOverlayControls.classList.add("visible");
-            } else {
-                fullscreenOverlayControls.classList.remove("visible");
-            }
-        }
-
-        document.addEventListener("fullscreenchange", updateFullscreenUI);
-        document.addEventListener("webkitfullscreenchange", updateFullscreenUI);
-        document.addEventListener("msfullscreenchange", updateFullscreenUI);
 
         /* ===== SEARCH ===== */
         searchInput.addEventListener("input", displayChannels);
