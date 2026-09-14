@@ -1,0 +1,1658 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ZextvLive - Live TV</title>
+
+    <meta name="description"
+          content="ZextvLive - Watch authorized live TV channels online.">
+
+    <meta name="theme-color" content="#09090f">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #09090f;
+            color: white;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           NAVBAR
+        ========================================= */
+
+        nav {
+            height: 70px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+
+            background: rgba(5, 5, 10, 0.97);
+            border-bottom: 1px solid #25252e;
+
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+
+            color: white;
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .logo span {
+            color: #ff3b6b;
+        }
+
+        .logo:hover {
+            color: white;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ff3b6b;
+        }
+
+
+        /* =========================================
+           HERO
+        ========================================= */
+
+        .hero {
+            min-height: 430px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 60px 8%;
+
+            background:
+                radial-gradient(
+                    circle at 80% 30%,
+                    rgba(255, 59, 107, 0.16),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #0b0b12,
+                    #10101a
+                );
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            background: rgba(255, 59, 107, 0.12);
+
+            border: 1px solid rgba(255, 59, 107, 0.3);
+
+            color: #ff6688;
+
+            font-size: 12px;
+            font-weight: bold;
+
+            margin-bottom: 20px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #ff3b6b;
+
+            box-shadow: 0 0 10px #ff3b6b;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 7vw, 76px);
+            line-height: 0.95;
+
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #ff3b6b;
+        }
+
+        .hero p {
+            max-width: 620px;
+
+            color: #a9a9b4;
+
+            font-size: 17px;
+            line-height: 1.7;
+
+            margin-bottom: 30px;
+        }
+
+        .hero-button {
+            display: inline-block;
+
+            padding: 13px 23px;
+
+            border-radius: 10px;
+
+            background: #ff3b6b;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .hero-button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        main {
+            width: min(1200px, 92%);
+            margin: auto;
+            padding: 50px 0;
+        }
+
+
+        /* =========================================
+           SECTION TITLE
+        ========================================= */
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+        }
+
+        .section-title p {
+            color: #888894;
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           SEARCH
+        ========================================= */
+
+        .search-box {
+            width: 100%;
+
+            margin-bottom: 22px;
+
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+
+            left: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #777783;
+
+            font-size: 18px;
+
+            pointer-events: none;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 52px;
+
+            padding: 0 18px 0 48px;
+
+            border-radius: 12px;
+
+            border: 1px solid #292934;
+
+            outline: none;
+
+            background: #111119;
+
+            color: white;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+        .search-box input::placeholder {
+            color: #777783;
+        }
+
+        .search-box input:focus {
+            border-color: #ff3b6b;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(255, 59, 107, 0.08);
+        }
+
+
+        /* =========================================
+           PLAYER
+        ========================================= */
+
+        .player-section {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .player-section.show {
+            display: block;
+        }
+
+        .player-wrapper {
+            background: #000;
+
+            border: 1px solid #292934;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 45px
+                rgba(0, 0, 0, 0.45);
+        }
+
+        .player-header {
+            min-height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 15px;
+
+            background: #111119;
+
+            border-bottom: 1px solid #252530;
+        }
+
+        .player-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .close-player {
+            width: 34px;
+            height: 34px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #292934;
+
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .close-player:hover {
+            background: #ff3b6b;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+
+            min-height: 300px;
+
+            display: block;
+
+            background: #000;
+        }
+
+        .player-message {
+            padding: 12px;
+
+            background: #111119;
+
+            color: #888;
+
+            text-align: center;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           FILTERS
+        ========================================= */
+
+        .filters {
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 28px;
+        }
+
+        .filter-btn {
+            border: 1px solid #2b2b35;
+
+            background: #12121a;
+
+            color: #aaa;
+
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: #ff3b6b;
+
+            color: white;
+
+            border-color: #ff3b6b;
+        }
+
+        .filter-btn.active {
+            background: #ff3b6b;
+
+            color: white;
+
+            border-color: #ff3b6b;
+        }
+
+
+        /* =========================================
+           CHANNEL GRID
+        ========================================= */
+
+        .channel-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fill,
+                    minmax(240px, 1fr)
+                );
+
+            gap: 18px;
+        }
+
+
+        /* =========================================
+           CHANNEL CARD
+        ========================================= */
+
+        .channel-card {
+            background: #111119;
+
+            border: 1px solid #252530;
+
+            border-radius: 15px;
+
+            padding: 18px;
+
+            transition: 0.25s;
+
+            overflow: hidden;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-4px);
+
+            border-color: #ff3b6b;
+
+            box-shadow:
+                0 10px 35px
+                rgba(0, 0, 0, 0.35);
+        }
+
+
+        /* =========================================
+           CHANNEL LOGO
+        ========================================= */
+
+        .channel-logo {
+            width: 100%;
+            height: 150px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #08080d;
+
+            overflow: hidden;
+
+            margin-bottom: 15px;
+
+            position: relative;
+        }
+
+        .channel-logo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+
+            padding: 15px;
+        }
+
+
+        /* =========================================
+           LIVE LABEL ON EVERY LOGO
+        ========================================= */
+
+        .live-label {
+            position: absolute;
+
+            top: 9px;
+            left: 9px;
+
+            z-index: 10;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding: 5px 9px;
+
+            border-radius: 6px;
+
+            background: #ff3b6b;
+
+            color: white;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.5px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0, 0, 0, 0.35);
+        }
+
+        .live-label-dot {
+            width: 6px;
+            height: 6px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            display: inline-block;
+
+            animation:
+                livePulse 1.2s infinite;
+        }
+
+        @keyframes livePulse {
+
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+
+            100% {
+                opacity: 1;
+            }
+
+        }
+
+
+        /* =========================================
+           FALLBACK LOGO
+        ========================================= */
+
+        .fallback-logo {
+            width: 70px;
+            height: 70px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #ff3b6b;
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================================
+           CHANNEL INFO
+        ========================================= */
+
+        .channel-info {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+        }
+
+        .channel-name {
+            font-size: 16px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+        .channel-category {
+            color: #888894;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           WATCH BUTTON
+        ========================================= */
+
+        .watch-btn {
+            border: none;
+
+            background: #ff3b6b;
+
+            color: white;
+
+            padding: 9px 13px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+        }
+
+        .watch-btn:hover {
+            filter: brightness(1.1);
+
+            transform: scale(1.03);
+        }
+
+
+        /* =========================================
+           EMPTY MESSAGE
+        ========================================= */
+
+        .empty {
+            display: none;
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #777783;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        footer {
+            margin-top: 50px;
+
+            padding: 35px 6%;
+
+            border-top: 1px solid #24242d;
+
+            text-align: center;
+
+            color: #777783;
+
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #ff3b6b;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 700px) {
+
+            nav {
+                padding: 0 5%;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .hero {
+                min-height: 380px;
+
+                padding: 50px 6%;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            main {
+                width: 90%;
+            }
+
+            .search-box input {
+                height: 50px;
+            }
+
+            .channel-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 12px;
+            }
+
+            .channel-card {
+                padding: 12px;
+            }
+
+            .channel-logo {
+                height: 110px;
+            }
+
+            .channel-logo img {
+                padding: 10px;
+            }
+
+            .channel-info {
+                display: block;
+            }
+
+            .watch-btn {
+                width: 100%;
+
+                margin-top: 10px;
+            }
+
+            .channel-name {
+                font-size: 14px;
+            }
+
+            video {
+                min-height: 210px;
+            }
+
+            .live-label {
+                top: 6px;
+                left: 6px;
+
+                padding: 4px 7px;
+
+                font-size: 9px;
+            }
+        }
+
+
+        @media (max-width: 430px) {
+
+            .channel-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .channel-logo {
+                height: 95px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         NAVBAR
+    ========================================== -->
+
+    <nav>
+
+        <!-- Clicking ZextvLive opens index.html -->
+
+        <a
+            href="./index.html"
+            class="logo">
+
+            Zex<span>tv</span>Live
+
+        </a>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="./index.html">
+                    Live TV
+                </a>
+            </li>
+
+            <li>
+                <a href="#about">
+                    About
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+
+    <!-- =========================================
+         HERO
+    ========================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="live-badge">
+
+                <span class="live-dot"></span>
+
+                LIVE TV
+
+            </div>
+
+
+            <h1>
+
+                Watch TV<br>
+
+                <span>Live.</span>
+
+            </h1>
+
+
+            <p>
+
+                Welcome to ZextvLive.
+                Browse your favorite channels
+                and watch authorized live streams
+                from one simple website.
+
+            </p>
+
+
+            <a
+                href="#channels"
+                class="hero-button">
+
+                Browse Channels
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <main id="channels">
+
+
+        <div class="section-title">
+
+            <div>
+
+                <h2>
+                    Live Channels
+                </h2>
+
+                <p>
+                    Search and choose a channel to watch.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             SEARCH AT TOP
+        ========================================== -->
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search channel..."
+                autocomplete="off">
+
+        </div>
+
+
+
+        <!-- =========================================
+             VIDEO PLAYER
+        ========================================== -->
+
+        <section
+            class="player-section"
+            id="playerSection">
+
+            <div class="player-wrapper">
+
+
+                <div class="player-header">
+
+                    <div
+                        class="player-title"
+                        id="playerTitle">
+
+                        Live Channel
+
+                    </div>
+
+
+                    <button
+                        class="close-player"
+                        id="closePlayerButton"
+                        type="button">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+
+                <video
+                    id="videoPlayer"
+                    controls
+                    playsinline>
+                </video>
+
+
+                <div class="player-message">
+
+                    Live stream playback requires
+                    an authorized stream URL.
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CATEGORY FILTERS
+        ========================================== -->
+
+        <div class="filters">
+
+            <button
+                class="filter-btn active"
+                data-category="all">
+
+                All
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-category="entertainment">
+
+                Entertainment
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-category="news">
+
+                News
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-category="sports">
+
+                Sports
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-category="music">
+
+                Music
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-category="kids">
+
+                Kids
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =========================================
+             CHANNELS
+        ========================================== -->
+
+        <div
+            class="channel-grid"
+            id="channelGrid">
+        </div>
+
+
+        <div
+            class="empty"
+            id="emptyMessage">
+
+            No channels found.
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+
+    <footer id="about">
+
+        © 2026
+
+        <strong>
+            ZextvLive
+        </strong>
+
+        — All rights reserved.
+
+    </footer>
+
+
+
+    <script>
+
+
+        /* =========================================
+           CHANNEL DATA
+        ========================================== */
+
+        const channels = [
+
+            {
+                name: "Star Maa HD",
+                category: "entertainment",
+                logo: "logos/star-maa.jpg",
+                stream: "https://da86m1sqpm3o0.cloudfront.net/28072023/smil:starmaa1.smil/chunklist_b2628000.m3u8"
+            },
+
+            {
+                name: "Star Maa Movies",
+                category: "entertainment",
+                logo: "logos/maamovies.jpg",
+                stream: "https://da86m1sqpm3o0.cloudfront.net/28072023/smil:maamovies.smil/chunklist_b2628000.m3u8"
+            },
+
+            {
+                name: "TV 9 Telugu",
+                category: "news",
+                logo: "logos/tv9.png",
+                stream: "https://dyjmyiv3bp2ez.cloudfront.net/pub-iotv9telcmjhcs/liveabr/playlist.m3u8"
+            },
+
+            {
+                name: "Gemini TV",
+                category: "entertainment",
+                logo: "logos/gemini-tv.jpg",
+                stream: "https://d27zlkxhgwrfgo.cloudfront.net/v1/master/9d43eacaed199f8d5883927e7aef514a8a08e108/ETV_HD_H264_cloud_in/index.m3u8"
+            },
+
+            {
+                name: "TV9 Telugu",
+                category: "news",
+                logo: "logos/tv9-telugu.jpg",
+                stream: ""
+            },
+
+            {
+                name: "Zex News",
+                category: "news",
+                logo: "logos/news.jpg",
+                stream: ""
+            },
+
+            {
+                name: "Zex Sports",
+                category: "sports",
+                logo: "logos/sports.jpg",
+                stream: ""
+            },
+
+            {
+                name: "Zex Music",
+                category: "music",
+                logo: "logos/music.jpg",
+                stream: ""
+            },
+
+            {
+                name: "Zex Kids",
+                category: "kids",
+                logo: "logos/kids.jpg",
+                stream: ""
+            }
+
+        ];
+
+
+
+        /* =========================================
+           ELEMENTS
+        ========================================== */
+
+        const channelGrid =
+            document.getElementById(
+                "channelGrid"
+            );
+
+
+        const searchInput =
+            document.getElementById(
+                "searchInput"
+            );
+
+
+        const emptyMessage =
+            document.getElementById(
+                "emptyMessage"
+            );
+
+
+        const playerSection =
+            document.getElementById(
+                "playerSection"
+            );
+
+
+        const videoPlayer =
+            document.getElementById(
+                "videoPlayer"
+            );
+
+
+        const playerTitle =
+            document.getElementById(
+                "playerTitle"
+            );
+
+
+        const closePlayerButton =
+            document.getElementById(
+                "closePlayerButton"
+            );
+
+
+        let currentCategory = "all";
+
+
+
+        /* =========================================
+           DISPLAY CHANNELS
+        ========================================== */
+
+        function displayChannels() {
+
+
+            const searchText =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const filtered =
+                channels.filter(channel => {
+
+
+                    const categoryMatch =
+
+                        currentCategory === "all"
+
+                        ||
+
+                        channel.category ===
+                        currentCategory;
+
+
+                    const searchMatch =
+
+                        channel.name
+                            .toLowerCase()
+                            .includes(searchText);
+
+
+                    return (
+                        categoryMatch &&
+                        searchMatch
+                    );
+
+                });
+
+
+            channelGrid.innerHTML = "";
+
+
+            if (filtered.length === 0) {
+
+                emptyMessage.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            emptyMessage.style.display =
+                "none";
+
+
+            filtered.forEach(channel => {
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "channel-card";
+
+
+                card.innerHTML = `
+
+                    <div class="channel-logo">
+
+                        <!-- LIVE LABEL -->
+
+                        <div class="live-label">
+
+                            <span
+                                class="live-label-dot">
+                            </span>
+
+                            LIVE
+
+                        </div>
+
+
+                        <!-- CHANNEL IMAGE -->
+
+                        <img
+                            src="${channel.logo}"
+                            alt="${channel.name} logo"
+                            loading="lazy"
+                        >
+
+
+                        <!-- FALLBACK -->
+
+                        <div
+                            class="fallback-logo"
+                            style="display:none;">
+
+                            ${getInitials(
+                                channel.name
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="channel-info">
+
+                        <div>
+
+                            <div class="channel-name">
+
+                                ${channel.name}
+
+                            </div>
+
+
+                            <div class="channel-category">
+
+                                ${capitalize(
+                                    channel.category
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="watch-btn"
+                            type="button">
+
+                            ▶ Watch
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                /* =================================
+                   IMAGE FALLBACK
+                ================================== */
+
+                const image =
+                    card.querySelector(
+                        ".channel-logo img"
+                    );
+
+
+                const fallback =
+                    card.querySelector(
+                        ".fallback-logo"
+                    );
+
+
+                image.addEventListener(
+                    "error",
+                    () => {
+
+                        image.style.display =
+                            "none";
+
+                        fallback.style.display =
+                            "flex";
+
+                    }
+                );
+
+
+                /* =================================
+                   WATCH BUTTON
+                ================================== */
+
+                const watchButton =
+                    card.querySelector(
+                        ".watch-btn"
+                    );
+
+
+                watchButton.addEventListener(
+                    "click",
+                    () => {
+
+                        playChannel(channel);
+
+                    }
+                );
+
+
+                channelGrid.appendChild(card);
+
+            });
+
+        }
+
+
+
+        /* =========================================
+           INITIALS
+        ========================================== */
+
+        function getInitials(name) {
+
+            return name
+
+                .split(" ")
+
+                .map(
+                    word => word[0]
+                )
+
+                .join("")
+
+                .substring(0, 2)
+
+                .toUpperCase();
+
+        }
+
+
+
+        /* =========================================
+           CAPITALIZE
+        ========================================== */
+
+        function capitalize(text) {
+
+            return (
+
+                text.charAt(0).toUpperCase()
+
+                +
+
+                text.slice(1)
+
+            );
+
+        }
+
+
+
+        /* =========================================
+           PLAY CHANNEL
+        ========================================== */
+
+        function playChannel(channel) {
+
+
+            playerTitle.textContent =
+                channel.name;
+
+
+            playerSection.classList.add(
+                "show"
+            );
+
+
+            setTimeout(() => {
+
+                playerSection.scrollIntoView({
+
+                    behavior: "smooth",
+
+                    block: "start"
+
+                });
+
+            }, 50);
+
+
+            if (!channel.stream) {
+
+
+                videoPlayer.pause();
+
+
+                videoPlayer.removeAttribute(
+                    "src"
+                );
+
+
+                videoPlayer.load();
+
+
+                alert(
+                    "No authorized stream URL has been added for "
+                    + channel.name
+                    + "."
+                );
+
+
+                return;
+
+            }
+
+
+            videoPlayer.src =
+                channel.stream;
+
+
+            videoPlayer.load();
+
+
+            videoPlayer.play()
+                .catch(() => {
+
+                    /* Browser may block autoplay */
+
+                });
+
+        }
+
+
+
+        /* =========================================
+           CLOSE PLAYER
+        ========================================== */
+
+        function closePlayer() {
+
+
+            videoPlayer.pause();
+
+
+            videoPlayer.removeAttribute(
+                "src"
+            );
+
+
+            videoPlayer.load();
+
+
+            playerSection.classList.remove(
+                "show"
+            );
+
+        }
+
+
+
+        closePlayerButton.addEventListener(
+            "click",
+            closePlayer
+        );
+
+
+
+        /* =========================================
+           SEARCH
+        ========================================== */
+
+        searchInput.addEventListener(
+            "input",
+            displayChannels
+        );
+
+
+
+        /* =========================================
+           CATEGORY FILTER
+        ========================================== */
+
+        document
+            .querySelectorAll(".filter-btn")
+            .forEach(button => {
+
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+
+                        document
+                            .querySelectorAll(
+                                ".filter-btn"
+                            )
+                            .forEach(btn => {
+
+                                btn.classList.remove(
+                                    "active"
+                                );
+
+                            });
+
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        currentCategory =
+                            button.dataset.category;
+
+
+                        displayChannels();
+
+                    }
+                );
+
+            });
+
+
+
+        /* =========================================
+           INITIAL LOAD
+        ========================================== */
+
+        displayChannels();
+
+
+    </script>
+
+</body>
+
+</html>
+```
