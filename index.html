@@ -244,7 +244,7 @@
             font-size: 12px;
         }
 
-        /* ===== PLAYER CONTROL BAR (only fullscreen button) ===== */
+        /* ===== PLAYER CONTROL BAR (fullscreen only) ===== */
         .player-control-bar {
             display: flex;
             align-items: center;
@@ -273,7 +273,7 @@
             border-color: #ff3b6b;
         }
 
-        /* ===== FULLSCREEN OVERLAY BUTTON (only exit) ===== */
+        /* ===== FULLSCREEN OVERLAY (exit button only) ===== */
         .fullscreen-overlay-controls {
             position: absolute;
             top: 12px;
@@ -525,11 +525,14 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            width: 100vw;
+            height: 100vh;
         }
         .player-wrapper:fullscreen video {
             flex: 1;
             min-height: auto;
             height: 100%;
+            width: 100%;
             object-fit: contain;
         }
         .player-wrapper:fullscreen .player-header,
@@ -548,11 +551,14 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            width: 100vw;
+            height: 100vh;
         }
         .player-wrapper:-webkit-full-screen video {
             flex: 1;
             min-height: auto;
             height: 100%;
+            width: 100%;
             object-fit: contain;
         }
         .player-wrapper:-webkit-full-screen .player-header,
@@ -614,12 +620,12 @@
 
                 <video id="videoPlayer" controls playsinline></video>
 
-                <!-- FULLSCREEN OVERLAY (only exit button) -->
+                <!-- FULLSCREEN OVERLAY (exit button only) -->
                 <div class="fullscreen-overlay-controls" id="fullscreenOverlayControls">
                     <button class="overlay-btn" id="exitFullscreenBtn" title="Exit Fullscreen">✕ Exit Fullscreen</button>
                 </div>
 
-                <!-- PLAYER CONTROL BAR (only fullscreen button) -->
+                <!-- PLAYER CONTROL BAR (fullscreen button only) -->
                 <div class="player-control-bar">
                     <button class="ctrl-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶ Fullscreen</button>
                 </div>
