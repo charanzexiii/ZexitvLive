@@ -235,7 +235,6 @@
             min-height: 300px;
             display: block;
             background: #000;
-            transition: object-fit 0.2s ease;
         }
         .player-message {
             padding: 12px;
@@ -245,21 +244,14 @@
             font-size: 12px;
         }
 
-        /* ===== PLAYER CONTROL BAR (fullscreen + ratio) ===== */
+        /* ===== PLAYER CONTROL BAR (only fullscreen button) ===== */
         .player-control-bar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
             padding: 10px 16px;
             background: #111119;
             border-top: 1px solid #252530;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .ctrl-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         .ctrl-btn {
             background: #1e1e2a;
@@ -280,31 +272,14 @@
             background: #ff3b6b;
             border-color: #ff3b6b;
         }
-        .ratio-select {
-            background: #1e1e2a;
-            border: 1px solid #2e2e3a;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-        }
-        .ratio-select option {
-            background: #111119;
-            color: white;
-        }
 
-        /* ===== FULLSCREEN OVERLAY BUTTONS ===== */
+        /* ===== FULLSCREEN OVERLAY BUTTON (only exit) ===== */
         .fullscreen-overlay-controls {
             position: absolute;
             top: 12px;
             right: 12px;
             z-index: 9999;
             display: none;
-            gap: 8px;
-            align-items: center;
         }
         .fullscreen-overlay-controls.visible {
             display: flex;
@@ -328,22 +303,6 @@
         .overlay-btn:hover {
             background: #ff3b6b;
             border-color: #ff3b6b;
-        }
-        .overlay-ratio-select {
-            background: rgba(30, 30, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            backdrop-filter: blur(6px);
-        }
-        .overlay-ratio-select option {
-            background: #111119;
-            color: white;
         }
 
         /* ===== FILTERS ===== */
@@ -536,40 +495,19 @@
             video { min-height: 210px; }
             .live-label { top: 6px; left: 6px; padding: 4px 7px; font-size: 9px; }
 
-            .player-control-bar {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 8px 12px;
-                gap: 8px;
-            }
-            .ctrl-group {
-                justify-content: space-between;
-            }
             .ctrl-btn {
-                flex: 1;
+                width: 100%;
                 justify-content: center;
                 font-size: 12px;
                 padding: 8px 8px;
-            }
-            .ratio-select {
-                flex: 1;
-                font-size: 12px;
-                padding: 8px 6px;
             }
 
             .fullscreen-overlay-controls {
                 top: 8px;
                 right: 8px;
-                gap: 5px;
-                flex-wrap: wrap;
-                justify-content: flex-end;
             }
             .overlay-btn {
                 padding: 6px 10px;
-                font-size: 11px;
-            }
-            .overlay-ratio-select {
-                padding: 6px 8px;
                 font-size: 11px;
             }
         }
@@ -676,33 +614,14 @@
 
                 <video id="videoPlayer" controls playsinline></video>
 
-                <!-- FULLSCREEN OVERLAY CONTROLS (only visible in fullscreen) -->
+                <!-- FULLSCREEN OVERLAY (only exit button) -->
                 <div class="fullscreen-overlay-controls" id="fullscreenOverlayControls">
                     <button class="overlay-btn" id="exitFullscreenBtn" title="Exit Fullscreen">✕ Exit Fullscreen</button>
-                    <select id="fullscreenRatioSelect" class="overlay-ratio-select">
-                        <option value="contain">Fit</option>
-                        <option value="fill">Stretch</option>
-                        <option value="cover">Crop</option>
-                        <option value="16/9">16:9</option>
-                        <option value="4/3">4:3</option>
-                    </select>
                 </div>
 
-                <!-- PLAYER CONTROL BAR (normal mode) -->
+                <!-- PLAYER CONTROL BAR (only fullscreen button) -->
                 <div class="player-control-bar">
-                    <div class="ctrl-group">
-                        <button class="ctrl-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶ Fullscreen</button>
-                    </div>
-                    <div class="ctrl-group">
-                        <label for="ratioSelect" style="font-size:13px; color:#aaa;">Ratio:</label>
-                        <select id="ratioSelect" class="ratio-select">
-                            <option value="contain" selected>Fit (Default)</option>
-                            <option value="fill">Stretch</option>
-                            <option value="cover">Crop</option>
-                            <option value="16/9">16:9</option>
-                            <option value="4/3">4:3</option>
-                        </select>
-                    </div>
+                    <button class="ctrl-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶ Fullscreen</button>
                 </div>
 
                 <div class="player-message">Live stream playback requires an authorized stream URL.</div>
@@ -798,10 +717,8 @@
         const closePlayerButton = document.getElementById("closePlayerButton");
         const playerWrapper = document.getElementById("playerWrapper");
         const fullscreenBtn = document.getElementById("fullscreenBtn");
-        const ratioSelect = document.getElementById("ratioSelect");
         const fullscreenOverlayControls = document.getElementById("fullscreenOverlayControls");
         const exitFullscreenBtn = document.getElementById("exitFullscreenBtn");
-        const fullscreenRatioSelect = document.getElementById("fullscreenRatioSelect");
 
         let currentCategory = "all";
 
@@ -886,11 +803,6 @@
 
             videoPlayer.src = channel.stream;
             videoPlayer.load();
-
-            // Sync both ratio selectors
-            applyRatio(ratioSelect.value);
-            fullscreenRatioSelect.value = ratioSelect.value;
-
             videoPlayer.play().catch(() => { /* autoplay blocked */ });
         }
 
@@ -945,7 +857,6 @@
             const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
             if (isFullscreen) {
                 fullscreenOverlayControls.classList.add("visible");
-                fullscreenRatioSelect.value = ratioSelect.value;
             } else {
                 fullscreenOverlayControls.classList.remove("visible");
             }
@@ -954,49 +865,6 @@
         document.addEventListener("fullscreenchange", updateFullscreenUI);
         document.addEventListener("webkitfullscreenchange", updateFullscreenUI);
         document.addEventListener("msfullscreenchange", updateFullscreenUI);
-
-        /* ===== RATIO CONTROL ===== */
-        function applyRatio(ratio) {
-            videoPlayer.style.aspectRatio = "";
-
-            if (ratio === "contain") {
-                videoPlayer.style.objectFit = "contain";
-                videoPlayer.style.width = "100%";
-                videoPlayer.style.height = "auto";
-            } else if (ratio === "fill") {
-                videoPlayer.style.objectFit = "fill";
-                videoPlayer.style.width = "100%";
-                videoPlayer.style.height = "auto";
-            } else if (ratio === "cover") {
-                videoPlayer.style.objectFit = "cover";
-                videoPlayer.style.width = "100%";
-                videoPlayer.style.height = "auto";
-            } else if (ratio === "16/9") {
-                videoPlayer.style.objectFit = "contain";
-                videoPlayer.style.width = "100%";
-                videoPlayer.style.height = "auto";
-                videoPlayer.style.aspectRatio = "16/9";
-            } else if (ratio === "4/3") {
-                videoPlayer.style.objectFit = "contain";
-                videoPlayer.style.width = "100%";
-                videoPlayer.style.height = "auto";
-                videoPlayer.style.aspectRatio = "4/3";
-            } else {
-                videoPlayer.style.objectFit = "contain";
-                videoPlayer.style.width = "100%";
-                videoPlayer.style.height = "auto";
-            }
-        }
-
-        ratioSelect.addEventListener("change", (e) => {
-            applyRatio(e.target.value);
-            fullscreenRatioSelect.value = e.target.value;
-        });
-
-        fullscreenRatioSelect.addEventListener("change", (e) => {
-            applyRatio(e.target.value);
-            ratioSelect.value = e.target.value;
-        });
 
         /* ===== SEARCH ===== */
         searchInput.addEventListener("input", displayChannels);
@@ -1013,7 +881,6 @@
 
         /* ===== INITIAL LOAD ===== */
         displayChannels();
-        applyRatio("contain");
 
     </script>
 </body>
