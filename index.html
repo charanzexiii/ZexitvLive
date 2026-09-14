@@ -265,6 +265,7 @@
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 28px;
+            align-items: center;
         }
         .filter-btn {
             border: 1px solid #2b2b35;
@@ -285,6 +286,22 @@
             background: #ff3b6b;
             color: white;
             border-color: #ff3b6b;
+        }
+
+        /* Row label + tighter spacing between the two filter rows */
+        .filter-label {
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: #777783;
+            margin-right: 2px;
+        }
+        #languageFilters {
+            margin-bottom: 12px;
+        }
+        #categoryFilters {
+            margin-bottom: 28px;
         }
 
         /* ===== CHANNEL GRID ===== */
@@ -454,6 +471,7 @@
             .channel-category { font-size: 11px; }
             .live-label { top: 5px; left: 5px; padding: 3px 6px; font-size: 8px; }
             .filter-btn { padding: 7px 12px; font-size: 12px; }
+            .filter-label { font-size: 11px; width: 100%; margin-bottom: 2px; }
 
             /* Player mobile */
             .player-wrapper { border-radius: 10px; }
@@ -524,14 +542,25 @@
             </div>
         </section>
 
-        <!-- SEARCH (below player) -->
+        <!-- SEARCH -->
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="Search channel..." autocomplete="off">
+            <input type="text" id="searchInput" placeholder="Search channel or language..." autocomplete="off">
+        </div>
+
+        <!-- LANGUAGE FILTERS (right after search) -->
+        <div class="filters" id="languageFilters">
+            <span class="filter-label">Language</span>
+            <button class="filter-btn active" data-language="all">All</button>
+            <button class="filter-btn" data-language="telugu">Telugu</button>
+            <button class="filter-btn" data-language="hindi">Hindi</button>
+            <button class="filter-btn" data-language="tamil">Tamil</button>
+            <button class="filter-btn" data-language="kannada">Kannada</button>
         </div>
 
         <!-- CATEGORY FILTERS -->
-        <div class="filters">
+        <div class="filters" id="categoryFilters">
+            <span class="filter-label">Category</span>
             <button class="filter-btn active" data-category="all">All</button>
             <button class="filter-btn" data-category="entertainment">Entertainment</button>
             <button class="filter-btn" data-category="news">News</button>
@@ -551,60 +580,103 @@
     </footer>
     
     <script>
-        /* ===== CHANNEL DATA ===== */
+        /* ===== CHANNEL DATA =====
+           Add or edit channels here.
+           language: telugu | hindi | tamil | kannada
+           stream: put your authorized .m3u8 URL or leave empty
+        */
         const channels = [
             {
                 name: "Star Maa HD",
                 category: "entertainment",
+                language: "telugu",
                 logo: "logos/star-maa.jpg",
                 stream: "https://da86m1sqpm3o0.cloudfront.net/28072023/smil:starmaa1.smil/chunklist_b2628000.m3u8"
             },
             {
                 name: "Star Maa Movies",
                 category: "entertainment",
+                language: "telugu",
                 logo: "logos/maamovies.jpg",
                 stream: "https://da86m1sqpm3o0.cloudfront.net/28072023/smil:maamovies.smil/chunklist_b2628000.m3u8"
             },
             {
                 name: "TV 9 Telugu",
                 category: "news",
+                language: "telugu",
                 logo: "logos/tv9.png",
                 stream: "https://dyjmyiv3bp2ez.cloudfront.net/pub-iotv9telcmjhcs/liveabr/playlist.m3u8"
             },
             {
                 name: "Star Sports 2 Hindi",
                 category: "sports",
+                language: "hindi",
                 logo: "logos/starsporthindi2.jpg",
                 stream: "https://tvsen5.aynaott.com/cXPB2LKkErN9/index.m3u8"
             },
             {
                 name: "NTV",
                 category: "news",
+                language: "telugu",
                 logo: "logos/ntv.jpg",
                 stream: "https://mumbai-edge.smartplaytv.in/NTVTelugu/index.m3u8"
             },
             {
                 name: "Zex Cinema Hindi",
                 category: "entertainment",
+                language: "hindi",
                 logo: "logos/zeecin.jpg",
                 stream: "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/NGCHD/default/NGCHD.m3u8"
             },
             {
                 name: "ETV Cinema HD",
-                category: "news",
+                category: "entertainment",
+                language: "telugu",
                 logo: "logos/etvcin.jpg",
                 stream: "https://d27zlkxhgwrfgo.cloudfront.net/v1/master/9d43eacaed199f8d5883927e7aef514a8a08e108/ETV_CINEMA_H264_cloud_in/index.m3u8"
             },
             {
                 name: "Zex Music",
                 category: "music",
+                language: "hindi",
                 logo: "logos/music.jpg",
                 stream: ""
             },
             {
                 name: "Zex Kids",
                 category: "kids",
+                language: "telugu",
                 logo: "logos/kids.jpg",
+                stream: ""
+            },
+            /* --- Tamil examples (add your stream URLs) --- */
+            {
+                name: "Sun TV",
+                category: "entertainment",
+                language: "tamil",
+                logo: "logos/suntv.jpg",
+                stream: ""
+            },
+            {
+                name: "KTV Tamil",
+                category: "music",
+                language: "tamil",
+                logo: "logos/ktv.jpg",
+                stream: ""
+            },
+            /* --- Kannada examples (add your stream URLs) --- */
+            {
+                name: "Star Suvarna",
+                category: "entertainment",
+                language: "kannada",
+                logo: "logos/suvarna.jpg",
+                stream: ""
+            },
+            {
+                name: "Udaya TV",
+                category: "entertainment",
+                language: "kannada",
+                logo: "logos/udaya.jpg",
                 stream: ""
             }
         ];
@@ -619,14 +691,25 @@
         const closePlayerButton = document.getElementById("closePlayerButton");
 
         let currentCategory = "all";
+        let currentLanguage = "all";
 
         /* ===== DISPLAY CHANNELS ===== */
         function displayChannels() {
             const searchText = searchInput.value.trim().toLowerCase();
+
             const filtered = channels.filter(channel => {
-                const categoryMatch = currentCategory === "all" || channel.category === currentCategory;
-                const searchMatch = channel.name.toLowerCase().includes(searchText);
-                return categoryMatch && searchMatch;
+                const categoryMatch =
+                    currentCategory === "all" || channel.category === currentCategory;
+
+                const languageMatch =
+                    currentLanguage === "all" || channel.language === currentLanguage;
+
+                const searchMatch =
+                    channel.name.toLowerCase().includes(searchText) ||
+                    channel.language.toLowerCase().includes(searchText) ||
+                    channel.category.toLowerCase().includes(searchText);
+
+                return categoryMatch && languageMatch && searchMatch;
             });
 
             channelGrid.innerHTML = "";
@@ -654,7 +737,7 @@
                     <div class="channel-info">
                         <div>
                             <div class="channel-name">${channel.name}</div>
-                            <div class="channel-category">${capitalize(channel.category)}</div>
+                            <div class="channel-category">${capitalize(channel.language)} • ${capitalize(channel.category)}</div>
                         </div>
                         <button class="watch-btn" type="button">▶ Watch</button>
                     </div>
@@ -717,10 +800,22 @@
         /* ===== SEARCH ===== */
         searchInput.addEventListener("input", displayChannels);
 
-        /* ===== CATEGORY FILTER ===== */
-        document.querySelectorAll(".filter-btn").forEach(button => {
+        /* ===== LANGUAGE FILTER ===== */
+        document.querySelectorAll("#languageFilters .filter-btn").forEach(button => {
             button.addEventListener("click", () => {
-                document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+                document.querySelectorAll("#languageFilters .filter-btn")
+                    .forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                currentLanguage = button.dataset.language;
+                displayChannels();
+            });
+        });
+
+        /* ===== CATEGORY FILTER ===== */
+        document.querySelectorAll("#categoryFilters .filter-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll("#categoryFilters .filter-btn")
+                    .forEach(btn => btn.classList.remove("active"));
                 button.classList.add("active");
                 currentCategory = button.dataset.category;
                 displayChannels();
