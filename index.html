@@ -296,6 +296,56 @@
             color: white;
         }
 
+        /* ===== FULLSCREEN OVERLAY BUTTONS ===== */
+        .fullscreen-overlay-controls {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 9999;
+            display: none;
+            gap: 8px;
+            align-items: center;
+        }
+        .fullscreen-overlay-controls.visible {
+            display: flex;
+        }
+        .overlay-btn {
+            background: rgba(30, 30, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            backdrop-filter: blur(6px);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .overlay-btn:hover {
+            background: #ff3b6b;
+            border-color: #ff3b6b;
+        }
+        .overlay-ratio-select {
+            background: rgba(30, 30, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            backdrop-filter: blur(6px);
+        }
+        .overlay-ratio-select option {
+            background: #111119;
+            color: white;
+        }
+
         /* ===== FILTERS ===== */
         .filters {
             display: flex;
@@ -506,6 +556,22 @@
                 font-size: 12px;
                 padding: 8px 6px;
             }
+
+            .fullscreen-overlay-controls {
+                top: 8px;
+                right: 8px;
+                gap: 5px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            .overlay-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .overlay-ratio-select {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
         }
 
         @media (max-width: 430px) {
@@ -533,6 +599,9 @@
         .player-wrapper:fullscreen .player-control-bar {
             display: none !important;
         }
+        .player-wrapper:fullscreen .fullscreen-overlay-controls.visible {
+            display: flex !important;
+        }
 
         .player-wrapper:-webkit-full-screen {
             border-radius: 0;
@@ -552,6 +621,9 @@
         .player-wrapper:-webkit-full-screen .player-message,
         .player-wrapper:-webkit-full-screen .player-control-bar {
             display: none !important;
+        }
+        .player-wrapper:-webkit-full-screen .fullscreen-overlay-controls.visible {
+            display: flex !important;
         }
     </style>
 </head>
@@ -604,7 +676,19 @@
 
                 <video id="videoPlayer" controls playsinline></video>
 
-                <!-- PLAYER CONTROL BAR: fullscreen + ratio -->
+                <!-- FULLSCREEN OVERLAY CONTROLS (only visible in fullscreen) -->
+                <div class="fullscreen-overlay-controls" id="fullscreenOverlayControls">
+                    <button class="overlay-btn" id="exitFullscreenBtn" title="Exit Fullscreen">✕ Exit Fullscreen</button>
+                    <select id="fullscreenRatioSelect" class="overlay-ratio-select">
+                        <option value="contain">Fit</option>
+                        <option value="fill">Stretch</option>
+                        <option value="cover">Crop</option>
+                        <option value="16/9">16:9</option>
+                        <option value="4/3">4:3</option>
+                    </select>
+                </div>
+
+                <!-- PLAYER CONTROL BAR (normal mode) -->
                 <div class="player-control-bar">
                     <div class="ctrl-group">
                         <button class="ctrl-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶ Fullscreen</button>
@@ -715,6 +799,9 @@
         const playerWrapper = document.getElementById("playerWrapper");
         const fullscreenBtn = document.getElementById("fullscreenBtn");
         const ratioSelect = document.getElementById("ratioSelect");
+        const fullscreenOverlayControls = document.getElementById("fullscreenOverlayControls");
+        const exitFullscreenBtn = document.getElementById("exitFullscreenBtn");
+        const fullscreenRatioSelect = document.getElementById("fullscreenRatioSelect");
 
         let currentCategory = "all";
 
@@ -800,10 +887,10 @@
             videoPlayer.src = channel.stream;
             videoPlayer.load();
 
-            // Apply current ratio (default "contain")
+            // Sync both ratio selectors
             applyRatio(ratioSelect.value);
+            fullscreenRatioSelect.value = ratioSelect.value;
 
-            // Play (no auto fullscreen)
             videoPlayer.play().catch(() => { /* autoplay blocked */ });
         }
 
@@ -813,14 +900,14 @@
             videoPlayer.removeAttribute("src");
             videoPlayer.load();
             playerSection.classList.remove("show");
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                exitFullscreen();
             }
         }
 
         closePlayerButton.addEventListener("click", closePlayer);
 
-        /* ===== FULLSCREEN LOGIC (manual only) ===== */
+        /* ===== FULLSCREEN LOGIC ===== */
         function enterFullscreen() {
             if (!playerWrapper) return;
             if (playerWrapper.requestFullscreen) {
@@ -851,10 +938,25 @@
         }
 
         fullscreenBtn.addEventListener("click", toggleFullscreen);
+        exitFullscreenBtn.addEventListener("click", exitFullscreen);
+
+        /* ===== FULLSCREEN STATE LISTENER ===== */
+        function updateFullscreenUI() {
+            const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+            if (isFullscreen) {
+                fullscreenOverlayControls.classList.add("visible");
+                fullscreenRatioSelect.value = ratioSelect.value;
+            } else {
+                fullscreenOverlayControls.classList.remove("visible");
+            }
+        }
+
+        document.addEventListener("fullscreenchange", updateFullscreenUI);
+        document.addEventListener("webkitfullscreenchange", updateFullscreenUI);
+        document.addEventListener("msfullscreenchange", updateFullscreenUI);
 
         /* ===== RATIO CONTROL ===== */
         function applyRatio(ratio) {
-            // Reset any inline aspect-ratio
             videoPlayer.style.aspectRatio = "";
 
             if (ratio === "contain") {
@@ -888,6 +990,12 @@
 
         ratioSelect.addEventListener("change", (e) => {
             applyRatio(e.target.value);
+            fullscreenRatioSelect.value = e.target.value;
+        });
+
+        fullscreenRatioSelect.addEventListener("change", (e) => {
+            applyRatio(e.target.value);
+            ratioSelect.value = e.target.value;
         });
 
         /* ===== SEARCH ===== */
@@ -905,13 +1013,8 @@
 
         /* ===== INITIAL LOAD ===== */
         displayChannels();
-
-        // Ensure default ratio is applied on page load
         applyRatio("contain");
 
-        /* ===== FULLSCREEN CHANGE (optional) ===== */
-        document.addEventListener("fullscreenchange", () => {});
-        document.addEventListener("webkitfullscreenchange", () => {});
     </script>
 </body>
 </html>
