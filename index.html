@@ -21,6 +21,7 @@
             background: #09090f;
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* ===== NAVBAR ===== */
@@ -224,6 +225,7 @@
             font-size: 20px;
             cursor: pointer;
             transition: 0.2s;
+            flex-shrink: 0;
         }
         .close-player:hover {
             background: #ff3b6b;
@@ -231,9 +233,10 @@
         video {
             width: 100%;
             height: auto;
-            min-height: 300px;
+            max-height: 70vh;
             display: block;
             background: #000;
+            object-fit: contain;
         }
         .player-message {
             padding: 12px;
@@ -421,7 +424,7 @@
             .nav-links a { font-size: 12px; }
             .hero { min-height: 380px; padding: 50px 6%; }
             .hero p { font-size: 15px; }
-            main { width: 90%; }
+            main { width: 92%; padding: 30px 0; }
             .search-box input { height: 50px; }
             .channel-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .channel-card { padding: 12px; }
@@ -430,13 +433,50 @@
             .channel-info { display: block; }
             .watch-btn { width: 100%; margin-top: 10px; }
             .channel-name { font-size: 14px; }
-            video { min-height: 210px; }
             .live-label { top: 6px; left: 6px; padding: 4px 7px; font-size: 9px; }
+
+            /* ===== MOBILE VIDEO FIX ===== */
+            .player-wrapper {
+                border-radius: 10px;
+            }
+            .player-header {
+                min-height: 45px;
+                padding: 0 12px;
+            }
+            .player-title {
+                font-size: 14px;
+            }
+            .close-player {
+                width: 30px;
+                height: 30px;
+                font-size: 18px;
+            }
+            video {
+                width: 100%;
+                height: auto;
+                min-height: 0;
+                max-height: 50vh;
+                object-fit: contain;
+                background: #000;
+            }
+            .player-message {
+                padding: 10px;
+                font-size: 11px;
+            }
         }
 
         @media (max-width: 430px) {
             .channel-grid { grid-template-columns: repeat(2, 1fr); }
             .channel-logo { height: 95px; }
+            video {
+                max-height: 45vh;
+            }
+        }
+
+        @media (max-width: 380px) {
+            video {
+                max-height: 40vh;
+            }
         }
     </style>
 </head>
@@ -481,7 +521,7 @@
                     <button class="close-player" id="closePlayerButton" type="button">×</button>
                 </div>
 
-                <video id="videoPlayer" controls playsinline></video>
+                <video id="videoPlayer" controls playsinline preload="auto"></video>
 
                 <div class="player-message">Live stream playback requires an authorized stream URL.</div>
             </div>
