@@ -151,7 +151,7 @@
             font-size: 13px;
         }
 
-        /* ===== SEARCH ===== */
+        /* ===== SEARCH (now below the player) ===== */
         .search-box {
             width: 100%;
             margin-bottom: 22px;
@@ -189,7 +189,7 @@
         /* ===== PLAYER ===== */
         .player-section {
             display: none;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .player-section.show {
             display: block;
@@ -604,13 +604,7 @@
             </div>
         </div>
 
-        <!-- SEARCH -->
-        <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="Search channel..." autocomplete="off">
-        </div>
-
-        <!-- VIDEO PLAYER -->
+        <!-- VIDEO PLAYER (now above the search) -->
         <section class="player-section" id="playerSection">
             <div class="player-wrapper" id="playerWrapper">
                 <div class="player-header">
@@ -633,6 +627,12 @@
                 <div class="player-message">Live stream playback requires an authorized stream URL.</div>
             </div>
         </section>
+
+        <!-- SEARCH (now below the video player) -->
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search channel..." autocomplete="off">
+        </div>
 
         <!-- CATEGORY FILTERS -->
         <div class="filters">
@@ -891,4 +891,3 @@
     </script>
 </body>
 </html>
-
