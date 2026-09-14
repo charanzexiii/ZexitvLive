@@ -22,6 +22,7 @@
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
         }
 
         /* ===== NAVBAR ===== */
@@ -48,10 +49,6 @@
         }
         .logo span {
             color: #ff3b6b;
-        }
-        .logo:hover {
-            color: white;
-            opacity: 0.9;
         }
         .nav-links {
             display: flex;
@@ -152,7 +149,7 @@
             font-size: 13px;
         }
 
-        /* ===== SEARCH (below player) ===== */
+        /* ===== SEARCH ===== */
         .search-box {
             width: 100%;
             margin-bottom: 22px;
@@ -178,6 +175,7 @@
             color: white;
             font-size: 15px;
             transition: 0.2s;
+            -webkit-appearance: none;
         }
         .search-box input::placeholder {
             color: #777783;
@@ -214,6 +212,10 @@
         .player-title {
             font-size: 16px;
             font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
         }
         .close-player {
             width: 34px;
@@ -230,14 +232,25 @@
         .close-player:hover {
             background: #ff3b6b;
         }
-        video {
+
+        /* ===== VIDEO WRAPPER WITH 16:9 RATIO ===== */
+        .video-container {
+            position: relative;
             width: 100%;
-            height: auto;
-            max-height: 70vh;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            background: #000;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: block;
             background: #000;
             object-fit: contain;
         }
+
         .player-message {
             padding: 12px;
             background: #111119;
@@ -261,6 +274,7 @@
             border-radius: 20px;
             cursor: pointer;
             transition: 0.2s;
+            font-size: 13px;
         }
         .filter-btn:hover {
             background: #ff3b6b;
@@ -389,6 +403,7 @@
             font-weight: bold;
             white-space: nowrap;
             transition: 0.2s;
+            font-size: 13px;
         }
         .watch-btn:hover {
             filter: brightness(1.1);
@@ -418,65 +433,45 @@
 
         /* ===== MOBILE ===== */
         @media (max-width: 700px) {
-            nav { padding: 0 5%; }
+            nav { padding: 0 5%; height: 60px; }
             .logo { font-size: 21px; }
             .nav-links { gap: 12px; }
             .nav-links a { font-size: 12px; }
-            .hero { min-height: 380px; padding: 50px 6%; }
-            .hero p { font-size: 15px; }
-            main { width: 92%; padding: 30px 0; }
-            .search-box input { height: 50px; }
+            .hero { min-height: 340px; padding: 40px 6%; }
+            .hero h1 { font-size: 38px; }
+            .hero p { font-size: 14px; }
+            main { width: 94%; padding: 30px 0; }
+            .section-title h2 { font-size: 22px; }
+            .section-title p { font-size: 12px; }
+            .search-box input { height: 48px; font-size: 14px; }
             .channel-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .channel-card { padding: 12px; }
-            .channel-logo { height: 110px; }
-            .channel-logo img { padding: 10px; }
+            .channel-card { padding: 10px; border-radius: 12px; }
+            .channel-logo { height: 100px; margin-bottom: 10px; }
+            .channel-logo img { padding: 8px; }
             .channel-info { display: block; }
-            .watch-btn { width: 100%; margin-top: 10px; }
-            .channel-name { font-size: 14px; }
-            .live-label { top: 6px; left: 6px; padding: 4px 7px; font-size: 9px; }
+            .watch-btn { width: 100%; margin-top: 8px; padding: 8px; font-size: 12px; }
+            .channel-name { font-size: 13px; }
+            .channel-category { font-size: 11px; }
+            .live-label { top: 5px; left: 5px; padding: 3px 6px; font-size: 8px; }
+            .filter-btn { padding: 7px 12px; font-size: 12px; }
 
-            /* ===== MOBILE VIDEO FIX ===== */
-            .player-wrapper {
-                border-radius: 10px;
-            }
-            .player-header {
-                min-height: 45px;
-                padding: 0 12px;
-            }
-            .player-title {
-                font-size: 14px;
-            }
-            .close-player {
-                width: 30px;
-                height: 30px;
-                font-size: 18px;
-            }
-            video {
-                width: 100%;
-                height: auto;
-                min-height: 0;
-                max-height: 50vh;
-                object-fit: contain;
-                background: #000;
-            }
-            .player-message {
-                padding: 10px;
-                font-size: 11px;
-            }
+            /* Player mobile */
+            .player-wrapper { border-radius: 10px; }
+            .player-header { min-height: 44px; padding: 0 12px; }
+            .player-title { font-size: 13px; }
+            .close-player { width: 28px; height: 28px; font-size: 16px; }
+            .player-message { padding: 8px; font-size: 10px; }
         }
 
         @media (max-width: 430px) {
             .channel-grid { grid-template-columns: repeat(2, 1fr); }
-            .channel-logo { height: 95px; }
-            video {
-                max-height: 45vh;
-            }
+            .channel-logo { height: 90px; }
         }
 
-        @media (max-width: 380px) {
-            video {
-                max-height: 40vh;
-            }
+        @media (max-width: 360px) {
+            .channel-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .channel-logo { height: 80px; }
+            .channel-name { font-size: 12px; }
         }
     </style>
 </head>
@@ -521,7 +516,9 @@
                     <button class="close-player" id="closePlayerButton" type="button">×</button>
                 </div>
 
-                <video id="videoPlayer" controls playsinline preload="auto"></video>
+                <div class="video-container">
+                    <video id="videoPlayer" controls playsinline webkit-playsinline preload="auto"></video>
+                </div>
 
                 <div class="player-message">Live stream playback requires an authorized stream URL.</div>
             </div>
@@ -704,7 +701,7 @@
 
             videoPlayer.src = channel.stream;
             videoPlayer.load();
-            videoPlayer.play().catch(() => { /* autoplay blocked */ });
+            videoPlayer.play().catch(() => { /* autoplay may be blocked */ });
         }
 
         /* ===== CLOSE PLAYER ===== */
