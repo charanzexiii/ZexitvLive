@@ -6,7 +6,8 @@
 
 ## 🌐 Live Website
 
-👉 **[Open ZextvLive](https://zextvlive.onrender.com/)**
+Link 1 👉 **[Open ZextvLive](https://zextvlive.onrender.com/)**
+Link 2👉 **[Open ZextvLive](https://zextv-live.vercel.app/)**
 
 ## 🖼️ Website Preview
 
@@ -33,6 +34,7 @@
 ## 🔗 Links
 
 * 🌐 **Website:** https://zextvlive.onrender.com/
+*  🌐 **Website:** https://zextv-live.vercel.app/
 * 💻 **GitHub:** https://github.com/charanzexiii/ZextvLive
 
 ## ⚠️ Disclaimer
