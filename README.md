@@ -33,8 +33,8 @@ Link 2👉 **[Open ZextvLive](https://zextv-live.vercel.app/)**
 
 ## 🔗 Links
 
-* 🌐 **Website:** https://zextvlive.onrender.com/
-*  🌐 **Website:** https://zextv-live.vercel.app/
+* 🌐 **Website 1:** https://zextvlive.onrender.com/
+*  🌐 **Website 2:** https://zextv-live.vercel.app/
 * 💻 **GitHub:** https://github.com/charanzexiii/ZextvLive
 
 ## ⚠️ Disclaimer
