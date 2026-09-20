@@ -464,6 +464,47 @@
             color: #ff3b6b;
         }
 
+
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .page-btn {
+            min-width: 42px;
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #2b2b35;
+            background: #12121a;
+            color: #aaa;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .page-btn:hover,
+        .page-btn.active {
+            background: #ff3b6b;
+            color: white;
+            border-color: #ff3b6b;
+        }
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .page-info {
+            width: 100%;
+            text-align: center;
+            color: #777783;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
         /* ===== MOBILE ===== */
         @media (max-width: 700px) {
             nav { padding: 0 5%; height: 60px; }
@@ -488,6 +529,9 @@
             .live-label { top: 5px; left: 5px; padding: 3px 6px; font-size: 8px; }
             .filter-btn { padding: 7px 12px; font-size: 12px; }
             .filter-label { font-size: 11px; width: 100%; margin-bottom: 2px; }
+
+            .pagination { gap: 6px; margin-top: 24px; }
+            .page-btn { min-width: 38px; height: 38px; padding: 0 9px; font-size: 13px; }
 
             /* Player mobile */
             .player-wrapper { border-radius: 10px; }
@@ -601,6 +645,10 @@
         <!-- CHANNELS -->
         <div class="channel-grid" id="channelGrid"></div>
         <div class="empty" id="emptyMessage">No channels found.</div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="pagination" id="pagination" aria-label="Channel pages"></div>
+        <div class="page-info" id="pageInfo"></div>
     </main>
 
     <!-- ===== SEO INFORMATION ===== -->
@@ -736,11 +784,17 @@
         let currentCategory = "all";
         let currentLanguage = "all";
 
-        /* ===== DISPLAY CHANNELS ===== */
-        function displayChannels() {
+        /* ===== PAGINATION ===== */
+        const CHANNELS_PER_PAGE = 20;
+        let currentPage = 1;
+
+        const pagination = document.getElementById("pagination");
+        const pageInfo = document.getElementById("pageInfo");
+
+        function getFilteredChannels() {
             const searchText = searchInput.value.trim().toLowerCase();
 
-            const filtered = channels.filter(channel => {
+            return channels.filter(channel => {
                 const categoryMatch =
                     currentCategory === "all" || channel.category === currentCategory;
 
@@ -754,16 +808,33 @@
 
                 return categoryMatch && languageMatch && searchMatch;
             });
+        }
+
+        /* ===== DISPLAY CHANNELS ===== */
+        function displayChannels() {
+            const filtered = getFilteredChannels();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / CHANNELS_PER_PAGE));
+
+            if (currentPage > totalPages) currentPage = totalPages;
 
             channelGrid.innerHTML = "";
 
             if (filtered.length === 0) {
                 emptyMessage.style.display = "block";
+                pagination.innerHTML = "";
+                pageInfo.textContent = "";
                 return;
             }
+
             emptyMessage.style.display = "none";
 
-            filtered.forEach(channel => {
+            const startIndex = (currentPage - 1) * CHANNELS_PER_PAGE;
+            const pageChannels = filtered.slice(
+                startIndex,
+                startIndex + CHANNELS_PER_PAGE
+            );
+
+            pageChannels.forEach(channel => {
                 const card = document.createElement("div");
                 card.className = "channel-card";
                 card.innerHTML = `
@@ -788,15 +859,80 @@
 
                 const image = card.querySelector(".channel-logo img");
                 const fallback = card.querySelector(".fallback-logo");
+
                 image.addEventListener("error", () => {
                     image.style.display = "none";
                     fallback.style.display = "flex";
                 });
 
-                const watchButton = card.querySelector(".watch-btn");
-                watchButton.addEventListener("click", () => playChannel(channel));
+                card.querySelector(".watch-btn")
+                    .addEventListener("click", () => playChannel(channel));
 
                 channelGrid.appendChild(card);
+            });
+
+            renderPagination(totalPages, filtered.length, startIndex, pageChannels.length);
+        }
+
+        function renderPagination(totalPages, totalChannels, startIndex, shownCount) {
+            pagination.innerHTML = "";
+
+            if (totalPages <= 1) {
+                pageInfo.textContent =
+                    `Showing ${totalChannels} channel${totalChannels === 1 ? "" : "s"}`;
+                return;
+            }
+
+            const previousButton = document.createElement("button");
+            previousButton.className = "page-btn";
+            previousButton.textContent = "‹";
+            previousButton.setAttribute("aria-label", "Previous page");
+            previousButton.disabled = currentPage === 1;
+            previousButton.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayChannels();
+                    scrollToChannels();
+                }
+            };
+            pagination.appendChild(previousButton);
+
+            for (let page = 1; page <= totalPages; page++) {
+                const button = document.createElement("button");
+                button.className = "page-btn" + (page === currentPage ? " active" : "");
+                button.textContent = page;
+                button.setAttribute("aria-label", `Page ${page}`);
+                button.setAttribute("aria-current", page === currentPage ? "page" : "false");
+                button.onclick = () => {
+                    currentPage = page;
+                    displayChannels();
+                    scrollToChannels();
+                };
+                pagination.appendChild(button);
+            }
+
+            const nextButton = document.createElement("button");
+            nextButton.className = "page-btn";
+            nextButton.textContent = "›";
+            nextButton.setAttribute("aria-label", "Next page");
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayChannels();
+                    scrollToChannels();
+                }
+            };
+            pagination.appendChild(nextButton);
+
+            pageInfo.textContent =
+                `Showing ${startIndex + 1}-${startIndex + shownCount} of ${totalChannels} channels • Page ${currentPage} of ${totalPages}`;
+        }
+
+        function scrollToChannels() {
+            document.getElementById("channels").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
             });
         }
 
@@ -841,7 +977,10 @@
         closePlayerButton.addEventListener("click", closePlayer);
 
         /* ===== SEARCH ===== */
-        searchInput.addEventListener("input", displayChannels);
+        searchInput.addEventListener("input", () => {
+            currentPage = 1;
+            displayChannels();
+        });
 
         /* ===== LANGUAGE FILTER ===== */
         document.querySelectorAll("#languageFilters .filter-btn").forEach(button => {
@@ -850,6 +989,7 @@
                     .forEach(btn => btn.classList.remove("active"));
                 button.classList.add("active");
                 currentLanguage = button.dataset.language;
+                currentPage = 1;
                 displayChannels();
             });
         });
@@ -861,6 +1001,7 @@
                     .forEach(btn => btn.classList.remove("active"));
                 button.classList.add("active");
                 currentCategory = button.dataset.category;
+                currentPage = 1;
                 displayChannels();
             });
         });
