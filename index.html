@@ -1065,6 +1065,9 @@
                 displayChannels();
             });
         });
+         document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+  });
 
         /* ===== INITIAL LOAD ===== */
         displayChannels();
