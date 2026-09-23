@@ -6,8 +6,8 @@
 
 ## 🌐 Live Website
 
-Link 1 👉 **[Open ZextvLive](https://zextvlive.onrender.com/)**
-Link 2👉 **[Open ZextvLive](https://zextv-live.vercel.app/)**
+Link 1 👉 **[Open ZextvLive](https://zexitv-live.vercel.app/)**
+Link 2👉 **[Open ZextvLive](https://zexitvlive.onrender.com/)**
 
 ## 🖼️ Website Preview
 
