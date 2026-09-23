@@ -12,7 +12,7 @@ Link 2👉 **[Open ZextvLive](https://zexitvlive.onrender.com/)**
 ## 🖼️ Website Preview
 
 <p align="center">
-  <a href="https://zextvlive.onrender.com/">
+  <a href="https://zexitv-live.vercel.app/">
     <img src="logos/website.PNG" alt="ZextvLive Website" width="900">
   </a>
 </p>
@@ -33,8 +33,8 @@ Link 2👉 **[Open ZextvLive](https://zexitvlive.onrender.com/)**
 
 ## 🔗 Links
 
-* 🌐 **Website 1:** https://zextvlive.onrender.com/
-*  🌐 **Website 2:** https://zextv-live.vercel.app/
+* 🌐 **Website 1:** https://zexitv-live.vercel.app/
+*  🌐 **Website 2:** https://zexitvlive.onrender.com/
 * 💻 **GitHub:** https://github.com/charanzexiii/ZextvLive
 
 ## ⚠️ Disclaimer
